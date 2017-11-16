@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'index/$', include('wuliu_app.urls')),
+    url(r'index/$', views.index, namespace='wuliu_app')
 ]
