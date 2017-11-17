@@ -27,11 +27,11 @@ def __lay_details(src_dict, des_list):
 
 
 def __lay_list(src_dict, des_list):
-    # import ipdb;ipdb.set_trace()
     categories = src_dict.getlist('category[]', ['all'])
     page_param = src_dict.get('page_param', {})
     page = page_param.get('page', 0)
     num = page_param.get('num', 3)
+    #import ipdb;ipdb.set_trace()
     average = page_param.get('average',conf.CONF_FALSE)
     start = int(page) * int(num)
     desc_str = ','.join(des_list)
@@ -39,9 +39,10 @@ def __lay_list(src_dict, des_list):
         part = src_dict.get('part', conf.CONF_NULL)
         if part==conf.CONF_NULL:
             raise Exception('invalid part in lay_list')
-        sql = 'select ' + desc_str + ' from article where part=' + part + 'limit ' + str(start) + ', ' + num
+        sql = 'select ' + desc_str + ' from article where part="' + part + '" limit ' + str(start) + ', ' + str(num)
     else:
         sql_category = ''
+        import ipdb;ipdb.set_trace()
         for category in categories:
             if category not in conf.VALID_CATEGORIES:
                 raise Exception('invalid category')
@@ -49,18 +50,18 @@ def __lay_list(src_dict, des_list):
             sql_category = sql_category[:-3]
         if average == conf.CONF_TRUE:
             sql = " select " + desc_str + " from article as a where (select count(*) from" + \
-                  " article as b where b.category=a.category and b.id>=a.id)<=" + str(num) + "and(" + sql_category + ")"
+                  " article as b where b.category=a.category and b.id>=a.id)<= " + str(num) + " and( " + sql_category + ")"
         else:
-            sql = "select" + desc_str + " from article where " + sql_category + "limit " \
+            sql = "select " + desc_str + " from article where " + sql_category + " limit " \
                   + str(start) + ', ' + num
     ct = sql_execute(sql)
     data = []
-    temp_dict = {}
     for c in ct:
+        temp_dict = {}
         for i in range(len(c)):
             temp_dict[des_list[i]] = c[i]
         data.append(temp_dict)
-    return temp_dict
+    return data
 
 
 def __lay_news(src_dict, des_list):
@@ -75,7 +76,6 @@ def index(request):
     if request.method == 'GET':
         return JsonResponse({'status': 1, 'data': {'error': 'only post allow'}})
     elif request.method == 'POST':
-        data = {}
         branch = request.POST.get('branch', 'null')
         try:
             if branch == 'op_add':
@@ -99,5 +99,5 @@ def index(request):
             status = 0
         except Exception as e:
             status = 2
-            data={'error':e}
+            data={'error':e.message}
         return JsonResponse({'status': status, 'data': data})
