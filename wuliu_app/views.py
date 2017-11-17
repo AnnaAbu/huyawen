@@ -27,15 +27,18 @@ def __lay_details(src_dict, des_list):
 
 
 def __lay_list(src_dict, des_list):
+    import ipdb;ipdb.set_trace()
     categories = src_dict.getlist('category[]', ['all'])
-    part = src_dict.get('part', 'null')
     page_param = src_dict.get('page_param', {})
     page = page_param.get('page', 0)
     num = page_param.get('num', 3)
     average = page_param.get('average', '1')
     start = int(page) * int(num)
-    desc_str = ''.join(des_list, ',')
+    desc_str = ','.join(des_list)
     if 'all' in categories:
+        part = src_dict.get('part', 'null')
+        if part=='null':
+            raise Exception('invalid part in lay_list')
         sql = 'select ' + desc_str + ' from article where part=' + part + 'limit ' + str(start) + ', ' + num
     else:
         sql_category = ''
@@ -86,7 +89,7 @@ def index(request):
             elif branch == 'lay_details':
                 data = __lay_details(request.POST)
             elif branch == 'lay_list':
-                data = __lay_list(request.POST)
+                data = __lay_list(request.POST,['id','title','timestamp','part','category'])
             elif branch == 'lay_news':
                 data = __lay_news(request.POST)
             elif branch == 'lay_carousel':
@@ -96,4 +99,5 @@ def index(request):
             status = 0
         except Exception as e:
             status = 2
+            data={'error':e}
         return JsonResponse({'status': status, 'data': data})

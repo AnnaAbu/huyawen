@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'wuliu_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'website',
+        'NAME': 'yuanshuting',
         'USER': 'root',
         'PASSWORD': '13313288898lzt',
         'HOST': '127.0.0.1',
