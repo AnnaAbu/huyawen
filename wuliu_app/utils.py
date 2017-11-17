@@ -50,3 +50,7 @@ def get_select_sql(data_list, table='article'):
     sql_select = sql_select[:-2]
     sql_select += ' from ' + table
     return sql_select
+
+def get_delete_sql(del_id,table='article'):
+    sql_delete= 'delete from'+ table+ 'where id='+str(del_id)
+    return sql_delete
