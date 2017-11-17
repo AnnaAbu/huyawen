@@ -18,5 +18,5 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r'index/$', views.index, namespace='wuliu_app')
+    url(r'index/$', views.index)
 ]

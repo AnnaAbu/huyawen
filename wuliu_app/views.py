@@ -4,17 +4,6 @@ from .utils import *
 from django.shortcuts import render
 from django.http import JsonResponse
 
-
-def get_valid_dict(src_dict,src_list):
-    desc_dict={}
-    for i in src_list:
-        desc_dict[i]=src_dict.get(i,'null')
-    return desc_dict
-
-def homepage(request):
-    pass
-
-
 def index(request):
     if request.method == 'GET':
         return JsonResponse({'status': 1, 'data': {'error': 'only post allow'}})
@@ -47,22 +36,5 @@ def index(request):
         except Exception as e:
             status = 1
         return JsonResponse({'status': status, 'data': data})
-
-def add_object():
-    sql_execute(get_insert_sql())
-    pass
-
-def delete_object():
-    pass
-
-def update_pbject():
-    pass
-
-def select_object():
-    pass
-
-def log_in(request):
-    pass
-
 
 
