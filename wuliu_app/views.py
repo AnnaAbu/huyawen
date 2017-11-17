@@ -27,17 +27,17 @@ def __lay_details(src_dict, des_list):
 
 
 def __lay_list(src_dict, des_list):
-    import ipdb;ipdb.set_trace()
+    # import ipdb;ipdb.set_trace()
     categories = src_dict.getlist('category[]', ['all'])
     page_param = src_dict.get('page_param', {})
     page = page_param.get('page', 0)
     num = page_param.get('num', 3)
-    average = page_param.get('average', '1')
+    average = page_param.get('average',conf.CONF_FALSE)
     start = int(page) * int(num)
     desc_str = ','.join(des_list)
     if 'all' in categories:
-        part = src_dict.get('part', 'null')
-        if part=='null':
+        part = src_dict.get('part', conf.CONF_NULL)
+        if part==conf.CONF_NULL:
             raise Exception('invalid part in lay_list')
         sql = 'select ' + desc_str + ' from article where part=' + part + 'limit ' + str(start) + ', ' + num
     else:
