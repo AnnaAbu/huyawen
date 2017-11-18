@@ -7,26 +7,26 @@ from . import conf
 
 
 def __op_add(src_dict, files):
-    sql_add = get_insert_sql(src_dict['data'])
-    result_row = sql_execute(sql_add,True)
-    return 'add_successfully'+ str(result_row)
+    sql_add = get_insert_sql(eval(src_dict['data']))
+    result_row = sql_execute(sql_add, True)
+    return 'add_successfully' + str(result_row)
 
 
 def __op_delete(src_dict, files):
     sql_delete = get_delete_sql(src_dict['id'])
-    result_row = sql_execute(sql_delete,True)
+    result_row = sql_execute(sql_delete, True)
     return 'delete_successfully' + str(result_row)
 
 
 def __op_update(src_dict, files):
-    sql_update = get_update_sql(src_dict['id'],src_dict['data'])
-    result_row = sql_execute(sql_update,True)
-    return 'add_successfully'+ str(result_row)
+    sql_update = get_update_sql(src_dict['id'], eval(src_dict['data']))
+    result_row = sql_execute(sql_update, True)
+    return 'add_successfully' + str(result_row)
 
 
 def __op_select(src_dict, des_list, filter_list):
     categories = []
-    show_num = src_dict.get('num','1')
+    show_num = src_dict.get('num', '1')
     if 'category' in filter_list:
         filter_list.remove('category')
         categories = src_dict.getlist('category[]', [conf.CONF_NULL])
@@ -84,7 +84,7 @@ def __lay_list(src_dict, des_list):
 
 
 def index(request):
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     if request.method == 'GET':
         return JsonResponse({'status': 1, 'data': {'error': 'only post allow'}})
     elif request.method == 'POST':
@@ -100,7 +100,7 @@ def index(request):
                 # import ipdb;ipdb.set_trace()
                 data = __op_select(request.POST, ['id', 'content', 'part', 'category'], ['part', 'category'])
             elif branch == 'lay_details':
-                #import ipdb;ipdb.set_trace()
+                # import ipdb;ipdb.set_trace()
                 data = __op_select(request.POST, ['id', 'title', 'content', 'timestamp', 'part', 'category'],
                                    ['id'])
             elif branch == 'lay_list':
@@ -117,3 +117,14 @@ def index(request):
             status = 2
             data = {'error': e.message}
         return JsonResponse({'status': status, 'data': data})
+    else:
+        return JsonResponse({'status': 3, 'data': {'error': 'invalid post'}})
+
+
+def login(requset):
+    if requset.method == 'POST':
+        pass
+    elif requset.method == 'GET':
+        return JsonResponse({'status': 1, 'data': {'error': 'only post allow'}})
+    else:
+        return JsonResponse({'status': 3, 'data': {'error': 'invalid post'}})
