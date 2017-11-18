@@ -18,12 +18,22 @@ def __op_update(src_dict, files):
     return {}
 
 
-def __lay_content(src_dict, des_list):
-    return {}
-
-
-def __lay_details(src_dict, des_list):
-    return {}
+def __op_select(data_list, post_list, show_num,desc_dict):
+    sql_select = get_select_sql(data_list, table='article')
+    sql_select += ' where '
+    for key in post_list:
+        temp_str =  key + ' = ' + '"' + desc_dict[key] + '"'+ ' and '
+        sql_select += temp_str
+    sql_select = sql_select[:-5]
+    sql_select += ' order by id desc limit ' + show_num + ';'
+    result_tuple = sql_execute(sql_select)
+    dict_list = []
+    for row in result_tuple:
+        temp_dict = {}
+        for i in range(len(row)):
+            temp_dict[data_list[i]] = row[i]
+        dict_list.append(temp_dict)
+    return dict_list
 
 
 def __lay_list(src_dict, des_list):
@@ -42,7 +52,7 @@ def __lay_list(src_dict, des_list):
         sql = 'select ' + desc_str + ' from article where part="' + part + '" limit ' + str(start) + ', ' + str(num)
     else:
         sql_category = ''
-        import ipdb;ipdb.set_trace()
+        #import ipdb;ipdb.set_trace()
         for category in categories:
             if category not in conf.VALID_CATEGORIES:
                 raise Exception('invalid category')
@@ -64,14 +74,6 @@ def __lay_list(src_dict, des_list):
     return data
 
 
-def __lay_news(src_dict, des_list):
-    return {}
-
-
-def __lay_carousel(src_dict, des_list):
-    return {}
-
-
 def index(request):
     if request.method == 'GET':
         return JsonResponse({'status': 1, 'data': {'error': 'only post allow'}})
@@ -85,15 +87,36 @@ def index(request):
             elif branch == 'op_update':
                 data = __op_update(request.POST, request.FILE)
             elif branch == 'lay_content':
-                data = __lay_content(request.POST)
+                # import ipdb;ipdb.set_trace()
+                data_list = ['id', 'content', 'part', 'category']
+                post_list = ['part', 'category']
+                num = '1'
+                status = 0
+                data = []
+                data = __op_select(data_list, post_list, num, request.POST)
             elif branch == 'lay_details':
-                data = __lay_details(request.POST)
+                data_list = ['id', 'title', 'content', 'timestamp', 'part', 'category']
+                post_list = ['id']
+                num = '1'
+                status = 0
+                data = []
+                data = __op_select(data_list, post_list, num, request.POST)
             elif branch == 'lay_list':
                 data = __lay_list(request.POST,['id','title','timestamp','part','category'])
             elif branch == 'lay_news':
-                data = __lay_news(request.POST)
+                data_list = ['id', 'title', 'content', 'image_url', 'part', 'category']
+                post_list = ['part', 'category']
+                num = '2'
+                status = 0
+                data = []
+                data = __op_select(data_list, post_list, num, request.POST)
             elif branch == 'lay_carousel':
-                data = __lay_carousel(request.POST)
+                data_list = ['id', 'image_url', 'part', 'category']
+                post_list = ['part', 'category']
+                num = '3'
+                status = 0
+                data = []
+                data = __op_select(data_list, post_list, num, request.POST)
             else:
                 data = {'message': 'invalid branch'}
             status = 0

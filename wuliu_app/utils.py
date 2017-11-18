@@ -43,13 +43,13 @@ def get_update_sql(pk_id, data_dict, table='article'):
     return sql_update
 
 
-# def get_select_sql(data_list, table='article'):
-#     sql_select = 'select '
-#     for key in data_list:
-#         sql_select += +'`' + key + '`, '
-#     sql_select = sql_select[:-2]
-#     sql_select += ' from ' + table
-#     return sql_select
+def get_select_sql(data_list, table='article'):
+    sql_select = 'select '
+    for key in data_list:
+        sql_select += +'`' + key + '`, '
+    sql_select = sql_select[:-2]
+    sql_select += ' from ' + table
+    return sql_select
 
 
 def get_delete_sql(del_id, table='article'):
