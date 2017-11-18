@@ -43,12 +43,26 @@ def get_update_sql(pk_id, data_dict, table='article'):
     return sql_update
 
 
-def get_select_sql(data_list, table='article'):
+def get_select_sql(des_list, show_num, filter_dict, categories, table='article'):
     sql_select = 'select '
-    for key in data_list:
-        sql_select += +'`' + key + '`, '
+    for key in des_list:
+        sql_select += '`' + key + '`, '
     sql_select = sql_select[:-2]
     sql_select += ' from ' + table
+    if len(filter_dict) or len(categories):
+        temp_sql = ' where '
+        if len(filter_dict):
+            for key, value in filter_dict:
+                temp_sql += '`' + key + '` = "' + value.replace('"', "'") + '" and '
+        if len(categories):
+            temp_sql += ' ('
+            for item in categories:
+                temp_sql += ' category="' + item + '" or '
+            temp_sql = temp_sql[:-3] + ')'
+        if not temp_sql.endswith(')'):
+            temp_sql = temp_sql[:-4]
+            sql_select += temp_sql
+    sql_select += 'order by id desc limit ' + str(show_num)
     return sql_select
 
 
