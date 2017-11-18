@@ -7,19 +7,26 @@ from . import conf
 
 
 def __op_add(src_dict, files):
-    return {}
+    sql_add = get_insert_sql(src_dict['data'])
+    result_row = sql_execute(sql_add,True)
+    return 'add_successfully'+ str(result_row)
 
 
 def __op_delete(src_dict, files):
-    return {}
+    sql_delete = get_delete_sql(src_dict['id'])
+    result_row = sql_execute(sql_delete,True)
+    return 'delete_successfully' + str(result_row)
 
 
 def __op_update(src_dict, files):
-    return {}
+    sql_update = get_update_sql(src_dict['id'],src_dict['data'])
+    result_row = sql_execute(sql_update,True)
+    return 'add_successfully'+ str(result_row)
 
 
-def __op_select(src_dict, show_num, des_list, filter_list):
+def __op_select(src_dict, des_list, filter_list):
     categories = []
+    show_num = src_dict.get('num','1')
     if 'category' in filter_list:
         filter_list.remove('category')
         categories = src_dict.getlist('category[]', [conf.CONF_NULL])
@@ -42,10 +49,9 @@ def __op_select(src_dict, show_num, des_list, filter_list):
 
 def __lay_list(src_dict, des_list):
     categories = src_dict.getlist('category[]', ['all'])
-    page_param = src_dict.get('page_param', {})
-    page = page_param.get('page', 0)
-    num = page_param.get('num', 3)
-    average = page_param.get('average', conf.CONF_FALSE)
+    page = src_dict.get('page', 0)
+    num = src_dict.get('num', 3)
+    average = src_dict.get('average', conf.CONF_FALSE)
     start = int(page) * int(num)
     desc_str = ','.join(des_list)
     if 'all' in categories:
@@ -91,18 +97,18 @@ def index(request):
                 data = __op_update(request.POST, request.FILE)
             elif branch == 'lay_content':
                 # import ipdb;ipdb.set_trace()
-                data = __op_select(request.POST, '1', ['id', 'content', 'part', 'category'], ['part', 'category'])
+                data = __op_select(request.POST, ['id', 'content', 'part', 'category'], ['part', 'category'])
             elif branch == 'lay_details':
                 #import ipdb;ipdb.set_trace()
-                data = __op_select(request.POST, '1', ['id', 'title', 'content', 'timestamp', 'part', 'category'],
+                data = __op_select(request.POST, ['id', 'title', 'content', 'timestamp', 'part', 'category'],
                                    ['id'])
             elif branch == 'lay_list':
                 data = __lay_list(request.POST, ['id', 'title', 'timestamp', 'part', 'category'])
             elif branch == 'lay_news':
-                data = __op_select(request.POST, '2', ['id', 'title', 'content', 'image_url', 'part', 'category'],
+                data = __op_select(request.POST, ['id', 'title', 'content', 'image_url', 'part', 'category'],
                                    ['part', 'category'])
             elif branch == 'lay_carousel':
-                data = __op_select(request.POST, '3', ['id', 'image_url', 'part', 'category'], ['part', 'category'])
+                data = __op_select(request.POST, ['id', 'image_url', 'part', 'category'], ['part', 'category'])
             else:
                 data = {'message': 'invalid branch'}
             status = 0
