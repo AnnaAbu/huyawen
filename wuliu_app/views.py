@@ -97,7 +97,7 @@ def index(request):
             elif branch == 'op_update':
                 data = __op_update(request.POST, request.FILES)
             elif branch == 'lay_content':
-                # import ipdb;ipdb.set_trace()
+                import ipdb;ipdb.set_trace()
                 data = __op_select(request.POST, ['id', 'content', 'part', 'category'], ['part', 'category'])
             elif branch == 'lay_details':
                 # import ipdb;ipdb.set_trace()
