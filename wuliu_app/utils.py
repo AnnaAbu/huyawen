@@ -52,7 +52,7 @@ def get_select_sql(des_list, show_num, filter_dict, categories, table='article')
     if len(filter_dict) or len(categories):
         temp_sql = ' where '
         if len(filter_dict):
-            for key, value in filter_dict:
+            for key, value in filter_dict.items():
                 temp_sql += '`' + key + '` = "' + value.replace('"', "'") + '" and '
         if len(categories):
             temp_sql += ' ('

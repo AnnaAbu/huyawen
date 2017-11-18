@@ -28,7 +28,7 @@ def __op_select(src_dict, show_num, des_list, filter_list):
                 raise Exception('invalid category')
     filter_dict = {}
     for item in filter_list:
-        filter_dict[src_dict[item]] = src_dict[item]
+        filter_dict[item] = src_dict[item]
     sql_select = get_select_sql(des_list, show_num, filter_dict, categories, table='article')
     result_tuple = sql_execute(sql_select)
     dict_list = []
@@ -93,6 +93,7 @@ def index(request):
                 # import ipdb;ipdb.set_trace()
                 data = __op_select(request.POST, '1', ['id', 'content', 'part', 'category'], ['part', 'category'])
             elif branch == 'lay_details':
+                #import ipdb;ipdb.set_trace()
                 data = __op_select(request.POST, '1', ['id', 'title', 'content', 'timestamp', 'part', 'category'],
                                    ['id'])
             elif branch == 'lay_list':
