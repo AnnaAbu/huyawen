@@ -42,7 +42,7 @@ def __lay_list(src_dict, des_list):
         sql = 'select ' + desc_str + ' from article where part="' + part + '" limit ' + str(start) + ', ' + str(num)
     else:
         sql_category = ''
-        import ipdb;ipdb.set_trace()
+        #import ipdb;ipdb.set_trace()
         for category in categories:
             if category not in conf.VALID_CATEGORIES:
                 raise Exception('invalid category')
@@ -73,17 +73,18 @@ def __lay_carousel(src_dict, des_list):
 
 
 def index(request):
+    import ipdb; ipdb.set_trace()
     if request.method == 'GET':
         return JsonResponse({'status': 1, 'data': {'error': 'only post allow'}})
     elif request.method == 'POST':
         branch = request.POST.get('branch', 'null')
         try:
             if branch == 'op_add':
-                data = __op_add(request.POST, request.FILE)
+                data = __op_add(request.POST, request.FILES)
             elif branch == 'op_delete':
-                data = __op_delete(request.POST, request.FILE)
+                data = __op_delete(request.POST, request.FILES)
             elif branch == 'op_update':
-                data = __op_update(request.POST, request.FILE)
+                data = __op_update(request.POST, request.FILES)
             elif branch == 'lay_content':
                 data = __lay_content(request.POST)
             elif branch == 'lay_details':
