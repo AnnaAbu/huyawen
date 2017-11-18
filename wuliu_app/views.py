@@ -115,7 +115,7 @@ def index(request):
             status = 0
         except Exception as e:
             status = 2
-            data = {'error': e.message}
+            data = {'error': e}
         return JsonResponse({'status': status, 'data': data})
     else:
         return JsonResponse({'status': 3, 'data': {'error': 'invalid post'}})
